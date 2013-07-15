@@ -1,6 +1,7 @@
 
 var fs = require('fs');
 var ncp = require('ncp').ncp;
+var utils = require('util');
 
 exports.buildGraphs = function (runs, repo_loc, saveLoc, charts, callback) {
   var data = [];
