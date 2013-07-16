@@ -1,0 +1,12 @@
+
+.chart rect {
+  fill: steelblue;
+  stroke: white;
+}
+.chart {
+  font-size: 12px;
+}
+
+.gContainer {
+  overflow-x: auto;
+}
