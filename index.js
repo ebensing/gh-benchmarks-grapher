@@ -3,8 +3,9 @@ var fs = require('fs');
 var ncp = require('ncp').ncp;
 var utils = require('util');
 
-exports.buildGraphs = function (runs, repo_loc, saveLoc, charts, callback) {
+exports.buildGraphs = function (runs, job, repo_loc, saveLoc, callback) {
   var data = [];
+  var charts = job.charts;
   var w = charts.length;
   // get the data for the charts
   for (var i=0; i < w; i++) {
@@ -35,9 +36,9 @@ exports.buildGraphs = function (runs, repo_loc, saveLoc, charts, callback) {
 
   // generate the html page
   var locals = {};
-  locals.projectName = run.job.projectName;
-  locals.title = run.job.title;
-  locals.charts = run.job.charts;
+  locals.projectName = job.projectName;
+  locals.title = job.title;
+  locals.charts = charts;
 
   fs.readFile(__dirname + '/static/index.jade', 'utf-8', function (err, data) {
     if (err) return callback(err);
