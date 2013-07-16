@@ -15,8 +15,8 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
       case "singleBar":
         var chartData = [];
         var l = runs.length;
-        for (var i=0; i < l; i++) {
-          var r = runs[i];
+        for (var x=0; x < l; i++) {
+          var r = runs[x];
           var o = {};
           o.x = r.lastCommit.substr(r.lastCommit.length - 6);
           o.y = r.output[chart.config.taskTitle][chart.config.field];
