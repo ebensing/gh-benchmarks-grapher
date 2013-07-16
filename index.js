@@ -4,7 +4,7 @@ var ncp = require('ncp').ncp;
 var utils = require('util');
 var jade = require('jade');
 
-exports.buildGraphs = function (runs, job, repo_loc, saveLoc, callback) {
+exports.buildGraphs = function (runs, job, repo_loc, callback) {
   var data = [];
   var charts = job.charts;
   var w = charts.length;
@@ -32,7 +32,7 @@ exports.buildGraphs = function (runs, job, repo_loc, saveLoc, callback) {
   }
   // save this data to a json file for use on github
   var writeObj = { data : data, charts : charts };
-  var saveLoc = utils.format("%s/%s/data.json", repo_loc, saveLoc);
+  var saveLoc = utils.format("%s/%s/data.json", repo_loc, job.saveLoc);
   fs.writeFileSync(saveLoc, JSON.stringify(writeObj));
 
   // generate the html page
@@ -46,11 +46,11 @@ exports.buildGraphs = function (runs, job, repo_loc, saveLoc, callback) {
 
     var fn = jade.compile(data);
     var html = fn(locals);
-    var saveLoc = utils.format("%s/%s/index.html", repo_loc, saveLoc);
-    fs.writeFile(saveLoc, html, function (err) {
+    var saveLocation = utils.format("%s/%s/index.html", repo_loc, job.saveLoc);
+    fs.writeFile(saveLocation, html, function (err) {
       if (err) return callback(err);
       // copy the dependencies into the repo
-      var saveDir = utils.format("%s/%s/", repo_loc, saveLoc);
+      var saveDir = utils.format("%s/%s/", repo_loc, job.saveLoc);
       ncp(__dirname + "/static", saveDir, { clobber : true }, function (err) {
         var files = ["index.html", "data.json", "graphs.js", "style.css", "bootstrap/"];
         callback(err, repo_loc, files);
