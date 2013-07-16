@@ -117,8 +117,13 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
   $("<h1 class='chartTitle'>%title%</h1>".replace("%title%",chartDesc.title))
     .appendTo(selector);
 
+  // get all of the keys that are actual values (ie. everything except x)
+  var valKeys = d3.keys(chartData[0]).filter(function (key) {
+    return key !== "x";
+  });
+
   var margin = { top : 20, right : 20, bottom : 30, left : 40 };
-  var width = 960 - margin.left - margin.right;
+  var width = (valKeys.length * chartData.length * 16) - margin.left - margin.right;
   var height = 500 - margin.top - margin.bottom;
 
   var x0 = d3.scale.ordinal().rangeRoundBands([0, width], .1);
@@ -132,16 +137,11 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
   var xAxis = d3.svg.axis().scale(x0).orient("bottom");
   var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(d3.format(".2s"));
 
+  // create the graph
   var graph = d3.select(selector).append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  // get all of the keys that are actual values (ie. everything except x)
-  var valKeys = d3.keys(chartData[0]).filter(function (key) {
-    return key !== "x";
-  });
-
 
   // this just makes later manipulation of the data easier
   var l = chartData.length;
@@ -165,21 +165,22 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
 
   // the names of the individual bars are based off of the name property on
   // each of the values
-  console.log(commits);
   x1.domain(barNames).rangeRoundBands([0, x0.rangeBand()]);
 
   // get the maximum value out of any item in the set
   y.domain([0, d3.max(chartData, function (data) {
     return d3.max(data.values, function (item) {
-      return item.val;
+      return item.val * 1.30;
     });
   })]);
 
+  // add the x-axis
   graph.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height +")")
     .call(xAxis);
 
+  // add the y-axis
   graph.append("g")
     .attr("class", "y axis")
     .call(yAxis)
@@ -190,6 +191,7 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
     .style("text-anchor", "end")
     .text(chartDesc.yLabel)
 
+  // add the groups
   var group = graph.selectAll(".group")
     .data(chartData).enter().append("g")
     .attr("class", "g")
@@ -197,6 +199,7 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
       return "translate(" + x0(d.x) + ",0)";
     });
 
+  // add the bars to the groups
   group.selectAll("rect")
     .data(function (d) {
       return d.values;
@@ -211,7 +214,7 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
     .data(barNames).enter().append("g")
     .attr("class", "legend")
     .attr("transform", function (d, i) {
-      return "translate(0," + (i*20) + ")";
+      return "translate(20," + (i*20) + ")";
     });
 
   legend.append("rect")

@@ -32,7 +32,10 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           var o = {};
           for (var x=0; x < chart.config.values.length; x++) {
             var val = chart.config.values[x];
-            o[x] = run[val.taskTitle][val.field];
+            var n = {};
+            n.name = val.taskTitle + "-" + val.field;
+            n.val = run[val.taskTitle][val.field];
+            o[x] = n;
           }
           o.x = run.lastCommit.substr(run.lastCommit.length - 6);
           chartData.push(o);
