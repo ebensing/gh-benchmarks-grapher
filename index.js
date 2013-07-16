@@ -2,6 +2,7 @@
 var fs = require('fs');
 var ncp = require('ncp').ncp;
 var utils = require('util');
+var jade = require('jade');
 
 exports.buildGraphs = function (runs, job, repo_loc, saveLoc, callback) {
   var data = [];
