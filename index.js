@@ -27,8 +27,8 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
       case "multiBar":
         var chartData = [];
         var l = runs.length;
-        for (var i=0; i < l; i++) {
-          var run = runs[i];
+        for (var a=0; a < l; a++) {
+          var run = runs[a];
           var o = {};
           for (var x=0; x < chart.config.values.length; x++) {
             var val = chart.config.values[x];
