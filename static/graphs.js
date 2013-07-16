@@ -123,7 +123,9 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
   });
 
   var margin = { top : 20, right : 20, bottom : 30, left : 40 };
-  var width = (valKeys.length * chartData.length * 16) - margin.left - margin.right;
+  // make sure the graph is at least 960px, but have it scale based on the
+  // number of entries
+  var width = d3.max([(valKeys.length * chartData.length * 16), 960]) - margin.left - margin.right;
   var height = 500 - margin.top - margin.bottom;
 
   var x0 = d3.scale.ordinal().rangeRoundBands([0, width], .1);
