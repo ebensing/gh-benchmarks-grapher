@@ -50,7 +50,7 @@ exports.buildGraphs = function (runs, job, repo_loc, saveLoc, callback) {
     fs.writeFile(saveLoc, html, function (err) {
       if (err) return callback(err);
       // copy the dependencies into the repo
-      var saveDir = utils.format("%s/%s/", repo_loc, run.job.saveLoc);
+      var saveDir = utils.format("%s/%s/", repo_loc, saveLoc);
       ncp(__dirname + "/static", saveDir, { clobber : true }, function (err) {
         var files = ["index.html", "data.json", "graphs.js", "style.css", "bootstrap/"];
         callback(err, repo_loc, files);
