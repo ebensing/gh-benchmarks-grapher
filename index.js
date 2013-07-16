@@ -25,6 +25,18 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
         data.push(chartData);
         break;
       case "multiBar":
+        var chartData = [];
+        var l = runs.length;
+        for (var i=0; i < l; i++) {
+          var run = runs[i];
+          var o = {};
+          for (var x=0; x < chart.config.values.length; x++) {
+            var val = chart.config.values[x];
+            o[x] = run[val.taskTitle][val.field];
+          }
+          o.x = run.lastCommit.substr(run.lastCommit.length - 6);
+          chartData.push(o);
+        }
         break;
       case "line":
         break;
