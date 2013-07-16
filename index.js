@@ -40,6 +40,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           o.x = run.lastCommit.substr(run.lastCommit.length - 6);
           chartData.push(o);
         }
+        data.push(chartData);
         break;
       case "line":
         break;
