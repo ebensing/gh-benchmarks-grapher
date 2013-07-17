@@ -21,10 +21,15 @@ $("document").ready(function () {
         case "multiBar":
           buildMultiBarGraph(selector, chartDesc, chartData);
           break;
+        case "line":
+          buildLineGraph(selector, chartDesc, chartData);
+          break;
       }
 
     }
-  });
+  }).error(function (err) {
+    console.log(err);
+  });;
 });
 
 function buildBarGraph(selector, chartDesc, chartData) {
@@ -234,3 +239,66 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
 
 }
 
+function buildLineGraph(selector, chartDesc, chartData) {
+
+  $("<h1 class='chartTitle'>%title%</h1>".replace("%title%", chartDesc.title))
+    .appendTo(selector);
+
+  var margin = { top : 20, right : 20, bottom : 30, left : 40 };
+  // make sure the graph is at least 960px, but have it scale based on the
+  // number of entries
+  var width = d3.max([(chartData.length * 50), 960]) - margin.left - margin.right;
+  var height = 500 - margin.top - margin.bottom;
+
+  var xVals = chartData.map(function (item) {
+    return item.x;
+  });
+
+  var keys = Object.keys(chartData[0]);
+  var lineData = {};
+  var max = -1;
+  for (var i=0; i < keys.length; i++) {
+    var k = keys[i];
+    if (k == "x") continue;
+    lineData[k] = chartData.map(function (item) {
+      return item[k];
+    });
+    max = d3.max([max, d3.max(lineData[k])]);
+  }
+
+  var x = d3.scale.linear().domain([0, chartData.length]).range([0, width]);
+
+  var y = d3.scale.linear().range([height, 0]).domain([0, max]);
+
+  var line = d3.svg.line()
+    .x(function (d, i) {
+      return x(i);
+    })
+    .y(function (d) {
+      return y(d);
+    });
+
+  // create the graph
+  var graph = d3.select(selector).append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true);
+  graph.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+  var yAxis = d3.svg.axis().scale(y).ticks(10).orient("left");
+  graph.append("g")
+    .attr("class", "y axis")
+    .attr("transform", "translate(-25, 0)")
+    .call(yAxis);
+
+  for (var i=0; i < keys.length; i++) {
+    var k = keys[i];
+    if (k == "x") continue;
+    graph.append("path").attr("d", line(lineData[k]));
+  }
+}
