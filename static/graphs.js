@@ -260,12 +260,14 @@ function buildLineGraph(selector, chartDesc, chartData) {
   var keys = Object.keys(chartData[0]);
   var lineData = {};
   var max = -1;
+  var lineNames = [];
   for (var i=0; i < keys.length; i++) {
     var k = keys[i];
     if (k == "x") continue;
     lineData[k] = chartData.map(function (item) {
       return item[k];
     });
+    lineNames.push(k);
     max = d3.max([max, d3.max(lineData[k])]);
   }
   var x = d3.scale.ordinal()
@@ -306,16 +308,47 @@ function buildLineGraph(selector, chartDesc, chartData) {
     .attr("transform", "translate(-5, 0)")
     .call(yAxis);
 
-  for (var i=0; i < keys.length; i++) {
-    var k = keys[i];
-    if (k == "x") continue;
-    graph.append("path").attr("d", line(lineData[k]));
+  var color = d3.scale.category20();
+
+  // add the lines
+  for (var i=0; i < lineNames.length; i++) {
+    var k = lineNames[i];
+    graph.append("path").attr("d", line(lineData[k]))
+      .attr("stroke", function (d, i) {
+        return color(k);
+      });
+    // add dots to represent the actual data
     graph.selectAll('circle.' + k)
       .data(lineData[k]).enter()
       .append('circle')
-      .attr("class", k)
+      .attr('class', k)
       .attr('cx', function(d, i) { return x(i); })
       .attr('cy', function(d) { return y(d); })
       .attr('r', 3);
+
+
   }
+
+  // build the legend
+
+
+  var legend = graph.append("g").attr("transform", "translate(30,0)")
+    .selectAll(".legend")
+    .data(lineNames).enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function (d, i) {
+      return "translate(" + (i*70) + ", 10)";
+    });
+
+  legend.append("circle")
+    .attr("r", 5)
+    .style("fill", color);
+
+  legend.append("text")
+    .attr("x", 50)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(function(d) { return d; });
+
+
 }
