@@ -316,6 +316,6 @@ function buildLineGraph(selector, chartDesc, chartData) {
       .attr("class", k)
       .attr('cx', function(d, i) { return x(i); })
       .attr('cy', function(d) { return y(d); })
-      .attr('r', 5);
+      .attr('r', 3);
   }
 }
