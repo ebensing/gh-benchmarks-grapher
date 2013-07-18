@@ -138,8 +138,11 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
 
   var y = d3.scale.linear().range([height, 0]);
 
-  var color = d3.scale.ordinal().range(["#98abc5", "#8a89a6", "#7b6888",
-      "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+  var color = d3.scale.category20();
+    /*
+     *.range(["#98abc5", "#8a89a6", "#7b6888",
+     *  "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+     */
 
   var xAxis = d3.svg.axis().scale(x0).orient("bottom");
   var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(d3.format(".2s"));
@@ -265,8 +268,10 @@ function buildLineGraph(selector, chartDesc, chartData) {
     });
     max = d3.max([max, d3.max(lineData[k])]);
   }
+  var x = d3.scale.ordinal()
+    .rangePoints([0, width], .1)
+    .domain(xVals);
 
-  var x = d3.scale.linear().domain([0, chartData.length]).range([0, width]);
 
   var y = d3.scale.linear().range([height, 0]).domain([0, max]);
 
@@ -290,15 +295,27 @@ function buildLineGraph(selector, chartDesc, chartData) {
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
-  var yAxis = d3.svg.axis().scale(y).ticks(10).orient("left");
+  var yAxis = d3.svg.axis()
+    .scale(y)
+    .ticks(10)
+    .orient("left")
+    .tickFormat(d3.format(".2s"));
+
   graph.append("g")
     .attr("class", "y axis")
-    .attr("transform", "translate(-25, 0)")
+    .attr("transform", "translate(-5, 0)")
     .call(yAxis);
 
   for (var i=0; i < keys.length; i++) {
     var k = keys[i];
     if (k == "x") continue;
     graph.append("path").attr("d", line(lineData[k]));
+    graph.selectAll('circle.' + k)
+      .data(lineData[k]).enter()
+      .append('circle')
+      .attr("class", k)
+      .attr('cx', function(d, i) { return x(i); })
+      .attr('cy', function(d) { return y(d); })
+      .attr('r', 5);
   }
 }
