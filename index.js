@@ -4,6 +4,22 @@ var ncp = require('ncp').ncp;
 var utils = require('util');
 var jade = require('jade');
 
+// helper function to get object property by string
+Object.byString = function(o, s) {
+  s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+  s = s.replace(/^\./, '');           // strip a leading dot
+  var a = s.split('.');
+  while (a.length) {
+      var n = a.shift();
+      if (n in o) {
+          o = o[n];
+      } else {
+          return;
+      }
+  }
+  return o;
+}
+
 exports.buildGraphs = function (runs, job, repo_loc, callback) {
   var data = [];
   var charts = job.charts;
@@ -19,7 +35,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           var r = runs[x];
           var o = {};
           o.x = r.lastCommit.substr(r.lastCommit.length - 6);
-          o.y = r.output[chart.config.taskTitle][chart.config.field];
+          o.y = Object.byString(r.output[chart.config.taskTitle], chart.config.field);
           chartData.push(o);
         }
         data.push(chartData);
@@ -34,7 +50,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
             var val = chart.config.values[x];
             var n = {};
             n.name = val.taskTitle + "-" + val.field;
-            n.val = run.output[val.taskTitle][val.field];
+            n.val = Object.byString(run.output[val.taskTitle], val.field);
             o[x] = n;
           }
           o.x = run.lastCommit.substr(run.lastCommit.length - 6);
@@ -51,7 +67,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           o.x = run.lastCommit;
           for (var w=0; w < chart.config.lines.length; w++) {
             var line = chart.config.lines[w];
-            o[line.taskTitle + "-" + line.field] = run.output[line.taskTitle][line.field];
+            o[line.taskTitle + "-" + line.field] = Object.byString(run.output[line.taskTitle], line.field);
           }
           chartData.push(o);
         }
