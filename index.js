@@ -98,6 +98,9 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
       var saveDir = utils.format("%s/%s/", repo_loc, job.saveLoc);
       ncp(__dirname + "/static", saveDir, { clobber : true }, function (err) {
         var files = ["index.html", "data.json", "graphs.js", "style.css", "bootstrap/"];
+        files = files.map(function (item) {
+          return utils.format("%s/%s", job.saveLoc, item);
+        });
         callback(err, files);
       });
     });
