@@ -65,8 +65,8 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           var run = runs[x];
           var o = {};
           o.x = run.lastCommit;
-          for (var w=0; w < chart.config.lines.length; w++) {
-            var line = chart.config.lines[w];
+          for (var y=0; y < chart.config.lines.length; y++) {
+            var line = chart.config.lines[y];
             o[line.taskTitle + "-" + line.field] = Object.byString(run.output[line.taskTitle], line.field);
           }
           chartData.push(o);
