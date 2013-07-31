@@ -34,7 +34,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
         for (var x=0; x < l; x++) {
           var r = runs[x];
           var o = {};
-          o.x = r.lastCommit.substr(r.lastCommit.length - 6);
+          o.x = r.tagName || r.lastCommit.substr(r.lastCommit.length - 6);
           o.y = Object.byString(r.output[chart.config.taskTitle], chart.config.field);
           chartData.push(o);
         }
@@ -53,7 +53,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
             n.val = Object.byString(run.output[val.taskTitle], val.field);
             o[x] = n;
           }
-          o.x = run.lastCommit.substr(run.lastCommit.length - 6);
+          o.x = run.tagName || run.lastCommit.substr(run.lastCommit.length - 6);
           chartData.push(o);
         }
         data.push(chartData);
@@ -64,7 +64,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
         for (var x=0; x < l; x++) {
           var run = runs[x];
           var o = {};
-          o.x = run.lastCommit.substr(run.lastCommit.length - 6);
+          o.x = run.tagName || run.lastCommit.substr(run.lastCommit.length - 6);
           for (var y=0; y < chart.config.lines.length; y++) {
             var line = chart.config.lines[y];
             o[line.taskTitle + "-" + line.field] = Object.byString(run.output[line.taskTitle], line.field);
