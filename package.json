@@ -1,6 +1,6 @@
 {
   "name": "gh-benchmarks-grapher",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "default graphing engine for gh-benchmarks",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,8 @@
     "url": "https://github.com/ebensing/gh-benchmarks-grapher"
   },
   "keywords": [
-    "benchmarks"
+    "benchmarks",
+    "gh-benchmarks"
   ],
   "author": "E.J. Bensing",
   "license": "BSD",
