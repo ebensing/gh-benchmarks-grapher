@@ -3,3 +3,8 @@
 node_modules/
 *.orig
 .DS_Store
+static/data.json
+static/data-multiBar.json
+static/genDummyPage.sh
+static/index.html
+static/test.html
