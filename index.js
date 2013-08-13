@@ -49,7 +49,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           for (var x=0; x < chart.config.values.length; x++) {
             var val = chart.config.values[x];
             var n = {};
-            n.name = val.taskTitle + "-" + val.field;
+            n.name = val.title;
             n.val = Object.byString(run.output[val.taskTitle], val.field);
             o[x] = n;
           }
@@ -67,7 +67,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           o.x = run.tagName || run.lastCommit.substr(run.lastCommit.length - 6);
           for (var y=0; y < chart.config.lines.length; y++) {
             var line = chart.config.lines[y];
-            o[line.taskTitle + "-" + line.field] = Object.byString(run.output[line.taskTitle], line.field);
+            o[line.title] = Object.byString(run.output[line.taskTitle], line.field);
           }
           chartData.push(o);
         }
