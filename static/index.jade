@@ -24,7 +24,42 @@ html(lang="en")
                 each chart, i in charts
                   li
                     a(href='#'+ i) #{chart.title}
+          ul.nav
+            li
+              a(href="#sysinfo", role="button", data-toggle="modal") System Information
     
     div.container-fluid
       div.row-fluid
         div.hero-unit
+
+    div#sysinfo(tabindex="-1", role="dialog", aria-labelledby="modalLabel", aria-hidden="true").modal.hide.fade
+      div.modal-header
+        button(type="button", data-dismiss="modal", aria-hidden="true").close x
+        h3#modalLabel System Information
+
+      div.modal-body
+        | These benchmarks were run on a system with the following specs. As
+        | usual, your millage may vary if you try running these on your own
+        | machine
+        table.table.table-bordered
+          tbody
+            tr
+              th Platform
+              td #{sysinfo.platform}
+            tr
+              th Architecture
+              td #{sysinfo.arch}
+            tr
+              th Release
+              td #{sysinfo.release}
+            tr
+              th Total Memory
+              td #{sysinfo.mem} Bytes
+            tr
+              th CPU Model
+              td #{sysinfo.cpuVersion}
+            tr
+              th CPU Count
+              td #{sysinfo.cpuCount}
+      div.modal-footer
+        button(data-dismiss="modal", aria-hidden="true").btn Close

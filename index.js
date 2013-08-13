@@ -86,6 +86,11 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
   locals.title = job.title;
   locals.charts = charts;
 
+  // get system information, should be the same for all runs
+  if (runs.length) {
+    locals.sysinfo = runs[0].sysinfo;
+  }
+
   fs.readFile(__dirname + '/static/index.jade', 'utf-8', function (err, data) {
     if (err) return callback(err);
 
