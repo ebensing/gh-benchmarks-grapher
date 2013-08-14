@@ -54,6 +54,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
             o[x] = n;
           }
           o.x = run.tagName || run.lastCommit.substr(run.lastCommit.length - 6);
+          o.x += "|" + job.repoUrl + "/tree/" + (r.tagName || r.lastCommit);
           chartData.push(o);
         }
         data.push(chartData);
@@ -65,6 +66,7 @@ exports.buildGraphs = function (runs, job, repo_loc, callback) {
           var run = runs[x];
           var o = {};
           o.x = run.tagName || run.lastCommit.substr(run.lastCommit.length - 6);
+          o.x += "|" + job.repoUrl + "/tree/" + (r.tagName || r.lastCommit);
           for (var y=0; y < chart.config.lines.length; y++) {
             var line = chart.config.lines[y];
             o[line.title] = Object.byString(run.output[line.taskTitle], line.field);
