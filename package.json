@@ -1,6 +1,6 @@
 {
   "name": "gh-benchmarks-grapher",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "default graphing engine for gh-benchmarks",
   "main": "index.js",
   "scripts": {
